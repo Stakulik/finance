@@ -20,6 +20,7 @@
 #
 
 class User < ActiveRecord::Base
+  has_many :portfolios
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
@@ -27,6 +28,10 @@ class User < ActiveRecord::Base
   validates :fio, presence: true, length: { in: 5..30 }
 
   before_save { self.email = email.downcase }
+
+  # если новая запись - выслать письмо
+
+  accepts_nested_attributes_for :portfolios, allow_destroy: true
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable
