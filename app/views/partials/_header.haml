@@ -1,0 +1,23 @@
+%nav.navbar.navbar-default
+  .container-fluid
+    .navbar-header
+      = link_to 'Finance', root_path, :class => "navbar-brand"
+
+    .collapse.navbar-collapse#bs-example-navbar-collapse-1
+      %ul.nav.navbar-nav
+        %li
+          = link_to 'Link', "#"
+        %li
+          = link_to 'Link2', "#"
+
+      - if current_user
+        %ul.nav.navbar-nav.navbar-right
+          %li
+            = link_to 'Выйти', destroy_user_session_path, :method => :delete 
+        %p.navbar-text.navbar-right
+          Вы зашли как
+          = link_to current_user.email, user_path, :class => "navbar-link"
+      -else
+        %ul.nav.navbar-nav.navbar-right
+          %li
+            = link_to 'Войти', new_user_session_path
