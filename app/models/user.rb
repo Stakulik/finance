@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
   validates :phone, length: { in: 6..20 }, if: :phone
   validates :fio, presence: true, length: { in: 5..30 }
+  validates :password, presence: true, length: { in: 6..20 }
 
   before_save { self.email = email.downcase }
 

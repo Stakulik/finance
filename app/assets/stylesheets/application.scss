@@ -34,6 +34,25 @@ body {
   margin-bottom: 60px;
 }
 
+.layout {
+  padding: 0 20px;
+}
+
+h2 {
+  color: #696464;
+  margin-bottom: 25px;
+
+  span {
+    font-size: 17px;
+    color: rgb(164, 161, 161);
+    margin-left: 5px;
+  }
+}
+
+h3 {
+  margin: 25px 0px;
+}
+
 footer {
   position: absolute;
   bottom: 0;

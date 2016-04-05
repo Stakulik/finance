@@ -1,3 +1,33 @@
-// Place all the styles related to the users controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.about-user {
+  margin-bottom: 15px;
+
+  font-size: 16px;
+
+  .attribute {
+    p.usual {
+      width: 80px;
+      float: left;
+    }
+
+    p.wider {
+      width: 135px;
+      float: left;
+    }
+
+    input {
+      margin-bottom: 20px;
+      position: relative;
+      top: -3px;
+      width: 250px;
+    }
+  }
+
+  .checkbox {
+    font-weight: lighter;
+    margin: -10px 0 0 20px;
+
+    label {
+      margin-left: -20px;
+    }
+  }
+}
