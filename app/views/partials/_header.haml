@@ -9,6 +9,9 @@
           = link_to 'Link', "#"
         %li
           = link_to 'Link2', "#"
+        - if current_user
+          %li
+            = link_to 'Портфели', portfolios_path
 
       - if current_user
         %ul.nav.navbar-nav.navbar-right

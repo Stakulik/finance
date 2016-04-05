@@ -1,6 +1,6 @@
 class StocksController < ApplicationController
   before_action :authenticate_user!
-  before_filter :check_for_cancel, :only => [:create, :update]
+  before_action :check_for_cancel, :only => [:create, :update]
 
   def new
     @portfolio = get_portfolio
@@ -53,7 +53,7 @@ class StocksController < ApplicationController
     if params[:portfolio_id]
       Portfolio.find(params[:portfolio_id])
     else
-      params[:stock][:portfolio_id]
+      Portfolio.find(@stock.portfolio_id)
     end
   end
 

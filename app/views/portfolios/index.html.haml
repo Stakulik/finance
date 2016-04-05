@@ -1,20 +1,16 @@
-= link_to 'Создать портфель', '#'
+%h2 Ваши портфели
+
+= link_to 'Создать портфель', new_portfolio_path
+%br
 
 - if @portfolios.any?
-  %h1 Ваши портфели:
-
-  - current_user.portfolios.each do |p|
-    %h4= link_to p.name, portfolio_path(p)
-    %p= p.description
-
-    %p
-      Дата создания:
-      = p.created_at.strftime('%d.%m.%Y')
-
-    %p
-      Акций в портфеле:
-      = p.stocks.count
+  .portfolios-list
+    %hr
+    - current_user.portfolios.each do |p|
+      = render "portfolios/portfolio", portfolio: p
+      %hr
 - else
-  %p На данный момент у вас нет созданных портфелей
-  = link_to 'Создать первый портфель', '#'
+  .no_items
+    %p На данный момент у вас нет созданных портфелей
+    = link_to 'Создать первый портфель', '#'
 

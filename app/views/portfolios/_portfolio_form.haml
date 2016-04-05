@@ -1,0 +1,16 @@
+= form_for @portfolio, :html => {:class => "usual-form"} do |f|
+
+  - if @portfolio.errors.any?
+    = render "partials/error_messages", target: @portfolio
+
+  .attribute
+    %label Название:
+    = f.text_field :name
+
+  .attribute
+    %label Описание:
+    = f.text_area :description
+
+  .actions
+    = f.submit "#{ @portfolio.new_record? ? 'Добавить' : 'Сохранить' }"
+    = f.submit "Отменить"

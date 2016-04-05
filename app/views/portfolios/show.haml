@@ -1,6 +1,6 @@
 %h2
   Портфель #{@portfolio.name}
-  %span Видов акций: #{@portfolio.stocks.length}
+  %span Акций: #{@portfolio.stocks.length}
 
 = link_to 'Добавить акцию', new_portfolio_stocks_path(@portfolio)
 %br

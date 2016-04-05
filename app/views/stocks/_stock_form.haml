@@ -1,6 +1,6 @@
 - path = @stock.new_record? ? "#{portfolio_stocks_path}" : "#{stock_path(@stock)}"
 
-= form_for @stock, :url => path, :html => {:class => "stock-form"} do |f|
+= form_for @stock, :url => path, :html => {:class => "usual-form"} do |f|
 
   - if @stock.errors.any?
     = render "partials/error_messages", target: @stock

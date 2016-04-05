@@ -1,3 +1,32 @@
-// Place all the styles related to the portfolios controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.usual-form {
+  #portfolio_name {
+    margin-left: 17px;
+    position: relative;
+    top: -3px;
+  }
+
+  #portfolio_description {
+    margin: 0px 0px 0px 15px;
+    width: 300px;
+    height: 80px;
+  }
+}
+
+.portfolio {
+  h4 {
+    margin: 0;
+  } 
+
+  .actions {
+    margin-top: 5px;
+  }
+
+  a {
+    margin-right: 5px;
+  }
+}
+
+.portfolios-list {
+  width: 100%;
+  margin: 25px 0 70px;
+}

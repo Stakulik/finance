@@ -1,0 +1,17 @@
+.portfolio
+  %h4= link_to portfolio.name, portfolio_path(portfolio)
+  %p= portfolio.description
+
+  %p
+    Акций в портфеле:
+    = portfolio.stocks.count
+
+  %p
+    Дата создания:
+    = portfolio.created_at.strftime('%d.%m.%Y')
+
+  .actions
+    = link_to "Изменить", edit_portfolio_path(portfolio)
+    = link_to "Удалить", portfolio, method: "delete", data: {confirm: 'Вы уверены?'}
+
+

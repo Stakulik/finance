@@ -13,25 +13,7 @@
   }
 }
 
-.stock-form {
-  width: 450px;
-  height: 120px;
-  margin: 5px 0;
-  font-size: 16px;
-
-  .attribute {
-    margin-bottom: 10px;
-  }
-
-  label {
-    font-weight: lighter;
-    float: left;
-  }
-
-  input {
-    max-width: 95px;
-  }
-
+.usual-form {
   #stock_name {
     margin-left: 19px;
     position: relative;
@@ -42,13 +24,10 @@
     margin-left: 5px;
   }
 
-  .actions {
-    margin-top: 20px;
-  }
-
 }
 
 .stocks-list {
   width: 300px;
   float: left;
+  margin-bottom: 70px;
 }
