@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root 'simple_pages#index'
 
   get 'about', to: 'simple_pages#about'
@@ -7,8 +8,8 @@ Rails.application.routes.draw do
   resource :user
 
   resources :portfolios do
-    resources :stocks, only: [:index, :new, :create]
+    resource :stocks, only: [:new, :create]
   end
-  resources :stocks, only: [:show, :edit, :update, :destroy]
+  resources :stocks, only: [:edit, :update, :destroy]
 
 end
