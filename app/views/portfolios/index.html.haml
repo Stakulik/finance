@@ -1,2 +1,20 @@
-%h1 Portfolios#index
-%p Find me in app/views/portfolios/index.html.haml
+= link_to 'Создать портфель', '#'
+
+- if @portfolios.any?
+  %h1 Ваши портфели:
+
+  - current_user.portfolios.each do |p|
+    %h4= link_to p.name, portfolio_path(p)
+    %p= p.description
+
+    %p
+      Дата создания:
+      = p.created_at.strftime('%d.%m.%Y')
+
+    %p
+      Акций в портфеле:
+      = p.stocks.count
+- else
+  %p На данный момент у вас нет созданных портфелей
+  = link_to 'Создать первый портфель', '#'
+

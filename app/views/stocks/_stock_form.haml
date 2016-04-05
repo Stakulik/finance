@@ -1,0 +1,20 @@
+- path = @stock.new_record? ? "#{portfolio_stocks_path}" : "#{stock_path(@stock)}"
+
+= form_for @stock, :url => path, :html => {:class => "stock-form"} do |f|
+
+  - if @stock.errors.any?
+    = render "partials/error_messages", target: @stock
+
+  = f.hidden_field :portfolio_id, :value => @stock.portfolio_id
+
+  .attribute
+    %label Название:
+    = f.text_field :name
+
+  .attribute
+    %label Количество:
+    = f.select :amount, options_for_select( (0..20).to_a, f.object.amount )
+
+  .actions
+    = f.submit "#{ @stock.new_record? ? 'Добавить' : 'Сохранить' }"
+    = f.submit "Отменить"

@@ -1,0 +1,20 @@
+%h2
+  Портфель #{@portfolio.name}
+  %span Видов акций: #{@portfolio.stocks.length}
+
+= link_to 'Добавить акцию', new_portfolio_stocks_path(@portfolio)
+%br
+
+- if @portfolio.stocks.any?
+  .stocks-list
+    %h3 Ваши акции:
+    %hr
+    - @portfolio.stocks.each do |s|
+      = render "stocks/stock", stock: s
+      %hr
+  .graph
+    %h3 График
+- else
+  .no_items
+    %p На данный момент в портфеле нет акций
+    = link_to 'Добавить первую акцию', new_portfolio_stocks_path(@portfolio)

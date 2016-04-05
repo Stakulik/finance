@@ -1,2 +1,5 @@
-%h1 Stocks#edit
-%p Find me in app/views/stocks/edit.html.haml
+%h2 
+  Редактировать акцию из портфеля
+  = link_to @portfolio.name, portfolio_path(@portfolio)
+
+= render "stock_form"

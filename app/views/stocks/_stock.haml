@@ -1,0 +1,9 @@
+.stock
+  %h4= stock.name
+  %p 
+    Количество:
+    = stock.amount
+
+  .actions
+    = link_to "Изменить", edit_stock_path(stock)
+    = link_to "Удалить", stock, method: "delete", data: {confirm: 'Вы уверены?'}

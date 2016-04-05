@@ -1,2 +1,5 @@
-%h1 Stocks#new
-%p Find me in app/views/stocks/new.html.haml
+%h2 
+  Добавить акцию в портфель 
+  = link_to @portfolio.name, portfolio_path(@portfolio)
+
+= render "stock_form"
