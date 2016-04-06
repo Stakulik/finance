@@ -19,6 +19,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'devise', '~> 3.5.6'
 
+gem 'yahoo-finance', '~> 1.0.0'
+gem 'metrics-graphics-rails', '~> 2.6'
+
 group :development, :test do
   gem 'byebug'
   gem 'annotate', '~> 2.7.0'
