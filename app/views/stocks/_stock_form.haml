@@ -8,6 +8,11 @@
   = f.hidden_field :portfolio_id, :value => @stock.portfolio_id
 
   .attribute
+    .example 
+      Название акции нужно добавить как аббревиатуру с YahooFinance.
+      %br
+      Пример: для Apple название будет AAPL .
+
     %label Название:
     = f.text_field :name
 

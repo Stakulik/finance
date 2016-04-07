@@ -20,8 +20,8 @@ class Portfolio < ActiveRecord::Base
 
   accepts_nested_attributes_for :stocks, allow_destroy: true
 
-  @@stocks_history = {}
 
+  @@stocks_history = {}
 
   def price_for_years(count_years = 2)
     @yahoo_client = YahooFinance::Client.new
@@ -41,7 +41,6 @@ class Portfolio < ActiveRecord::Base
 
   def get_finance_quotes(stock, count_years)
     data_by_days = get_history_data(stock.name)
-
     data_by_days ||= get_yahoo_data(stock, count_years)
 
     return nil unless data_by_days
@@ -49,16 +48,26 @@ class Portfolio < ActiveRecord::Base
     add_today_data(data_by_days, stock)
   end
 
-  def add_today_data(data_by_days, stock)
-    yahoo_today_data = try_use_yahoo(stock, nil).try(:first)
+  # @@stocks_history looks like { :AAPL => [ "07.04.2016", yahoo_data ] }
+  # and holds yahoo's today data about stock if today earlier was query about this stock
+  def get_history_data(stock_name)
+    history_data = @@stocks_history[stock_name.to_sym].deep_dup
 
-    if yahoo_today_data
-      yahoo_today_data[:trade_date] = Time.now.strftime('%Y-%m-%d')
+    return nil unless history_data
 
-      data_by_days.unshift(yahoo_today_data)
+    if history_data[0] == Time.now.strftime('%d.%m.%Y')
+      history_data[1] 
+    else
+      nil
     end
+  end
 
-    data_by_days
+  def get_yahoo_data(stock, count_years)
+    yahoo_data = try_use_yahoo(stock, count_years)
+
+    update_history_data(stock.name, yahoo_data) if yahoo_data
+
+    yahoo_data
   end
 
   def try_use_yahoo(stock, count_years)
@@ -74,7 +83,7 @@ class Portfolio < ActiveRecord::Base
         @yahoo_client.quotes([stock.name], [:low, :high, :trade_date])
       end
 
-      sleep(0.3)
+      sleep(0.1)
     rescue Exception => e
       logger.error "Problem around getting data about #{stock.name} stock"
       logger.error e.message
@@ -84,27 +93,20 @@ class Portfolio < ActiveRecord::Base
     yahoo_data
   end
 
-
-  def get_yahoo_data(stock, count_years)
-    yahoo_data = try_use_yahoo(stock, count_years)
-
-    update_history_data(stock.name, yahoo_data) if yahoo_data
-
-    yahoo_data
-  end
-
   def update_history_data(stock_name, yahoo_data)
-    @@stocks_history[stock_name.to_sym] = [Time.now.strftime('%d.%m.%Y'), yahoo_data]
+    @@stocks_history[stock_name.to_sym] = [Time.now.strftime('%d.%m.%Y'), yahoo_data.deep_dup]
   end
 
-  def get_history_data(stock_name)
-    history_data = @@stocks_history[stock_name.to_sym]
-    
-    if history_data
-      return history_data[1] if history_data[0] == Time.now.strftime('%d.%m.%Y')
+  def add_today_data(data_by_days, stock)
+    yahoo_today_data = try_use_yahoo(stock, nil).try(:first)
+
+    if yahoo_today_data
+      yahoo_today_data[:trade_date] = Time.now.strftime('%Y-%m-%d')
+
+      data_by_days.unshift(yahoo_today_data)
     end
 
-    history_data
+    data_by_days
   end
 
   def calculate_prices_for_stock(data_by_days, prices_by_days, stock_amount)
