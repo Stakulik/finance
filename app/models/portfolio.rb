@@ -16,7 +16,7 @@ class Portfolio < ActiveRecord::Base
 
   validates :name, presence: true, length: { in: 1..30 }
   validates :user_id, presence: true
-  validates :description, length: { in: 1..200 }, if: :description
+  validates :description, length: { in: 0..200 }
 
   accepts_nested_attributes_for :stocks, allow_destroy: true
 
@@ -83,7 +83,7 @@ class Portfolio < ActiveRecord::Base
         @yahoo_client.quotes([stock.name], [:low, :high, :trade_date])
       end
 
-      sleep(0.1)
+      sleep(0.3)
     rescue Exception => e
       logger.error "Problem around getting data about #{stock.name} stock"
       logger.error e.message

@@ -19,7 +19,7 @@
             = link_to 'Выйти', destroy_user_session_path, :method => :delete 
         %p.navbar-text.navbar-right
           Вы зашли как
-          = link_to current_user.email, user_path, :class => "navbar-link"
+          = link_to current_user.email, edit_user_registration_path, :class => "navbar-link"
       -else
         %ul.nav.navbar-nav.navbar-right
           %li

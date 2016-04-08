@@ -56,6 +56,8 @@ ru:
         email: E-mail
         phone: Телефон
         password: Пароль
+        password_confirmation: Подтверждение пароля
+        current_password: Текущий пароль
       portfolio:
         name: Название
         description: Описание

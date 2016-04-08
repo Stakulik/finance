@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: portfolios
+#
+#  id          :integer          not null, primary key
+#  name        :string(30)       not null
+#  description :string(200)
+#  user_id     :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class PortfoliosController < ApplicationController
   before_action :authenticate_user!
   before_action :check_for_cancel, :only => [:create, :update]

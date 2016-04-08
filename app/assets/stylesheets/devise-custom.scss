@@ -1,5 +1,13 @@
 .notice, .alert, #error_explanation {
-  margin: 0px 0px 20px -26px;
+  margin: 0px 0px 25px -20px;
   color: #A94442;
   font-size: 15px;
+}
+
+#error_explanation {
+  h2 {
+    font-size: 19px;
+    margin: 5px 0 5px 21px;
+    color: #A94442;
+  }
 }

@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  fio                    :string(30)       not null
+#  fio                    :string(30)       default(""), not null
 #  email                  :string(20)       not null
 #  phone                  :string(20)
 #  created_at             :datetime         not null

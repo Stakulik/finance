@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  fio                    :string(30)       not null
+#  fio                    :string(30)       default(""), not null
 #  email                  :string(20)       not null
 #  phone                  :string(20)
 #  created_at             :datetime         not null
@@ -24,13 +24,10 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-  validates :phone, length: { in: 6..20 }, if: :phone
-  validates :fio, presence: true, length: { in: 5..30 }
-  validates :password, presence: true, length: { in: 6..20 }
+  validates :password, :password_confirmation, presence: true, length: { in: 6..20 }, if: :password
+  validates_confirmation_of :password
 
   before_save { self.email = email.downcase }
-
-  # если новая запись - выслать письмо
 
   accepts_nested_attributes_for :portfolios, allow_destroy: true
 

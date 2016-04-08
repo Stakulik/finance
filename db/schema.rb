@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160405083717) do
+ActiveRecord::Schema.define(version: 20160408082929) do
 
   create_table "portfolios", force: :cascade do |t|
     t.string   "name",        limit: 30,  null: false
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20160405083717) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "fio",                    limit: 30,              null: false
+    t.string   "fio",                    limit: 30, default: "", null: false
     t.string   "email",                  limit: 20,              null: false
     t.string   "phone",                  limit: 20
     t.datetime "created_at",                                     null: false

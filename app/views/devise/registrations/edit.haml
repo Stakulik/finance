@@ -1,0 +1,35 @@
+%h2 Редактирование информации о #{current_user.email}
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, :class => "about-user" }) do |f|
+  = devise_error_messages!
+
+  .attribute
+    %p.wider E-mail:
+    = f.email_field :email, autofocus: true
+
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    .Currently waiting confirmation for: #{resource.unconfirmed_email}
+
+  .attribute
+    %p.wider Пароль: 
+    = f.password_field :password
+    .explanation (оставьте пустым, если не хотите его менять)
+
+  .attribute
+    %p.wider Пароль еще раз:
+    = f.password_field :password_confirmation
+
+  .attribute
+    %p.wider Текущий пароль:
+    = f.password_field :current_password
+    .explanation (чтобы подтвердить изменения)
+
+  = f.submit "Изменить"
+
+.back-link
+  = link_to "Назад - к портфелям", portfolios_path
+
+%h4 Удаление аккаунта
+
+= button_to "Удалить мой аккаунт", registration_path(resource_name), data: { confirm: "Вы уверены?" }, method: :delete
+%br

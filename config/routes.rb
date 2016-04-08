@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   get 'about', to: 'simple_pages#about'
 
   devise_for :users
-  resource :user
 
   resources :portfolios do
     resource :stocks, only: [:new, :create]
