@@ -6,9 +6,9 @@
     .collapse.navbar-collapse#bs-example-navbar-collapse-1
       %ul.nav.navbar-nav
         %li
-          = link_to 'Link', "#"
+          = link_to 'Новости', news_path
         %li
-          = link_to 'Link2', "#"
+          = link_to 'Контакты', contacts_path
         - if current_user
           %li
             = link_to 'Портфели', portfolios_path

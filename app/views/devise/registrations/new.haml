@@ -1,24 +1,25 @@
+- provide(:title, "Регистрация нового пользователя")
+
 %h2 Регистрация нового пользователя
 
 %p.notice= notice
 %p.alert= alert
 
-.about-user
-  = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-    = devise_error_messages!
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { :class => "about-user" }) do |f|
+  = devise_error_messages!
 
-    .attribute
-      %p.wider E-mail:
-      = f.email_field :email, autofocus: true
+  .attribute
+    %p.wider E-mail:
+    = f.email_field :email, autofocus: true
 
-    .attribute
-      %p.wider Пароль:
-      = f.password_field :password
+  .attribute
+    %p.wider Пароль:
+    = f.password_field :password
 
-    .attribute
-      %p.wider Пароль еще раз:
-      = f.password_field :password_confirmation
+  .attribute
+    %p.wider Пароль еще раз:
+    = f.password_field :password_confirmation
 
-    = f.submit "Зарегистрироваться"
+  = f.submit "Зарегистрироваться"
 
 = render "devise/shared/links"

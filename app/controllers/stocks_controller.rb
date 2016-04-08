@@ -11,7 +11,10 @@
 #
 
 class StocksController < ApplicationController
+  include UserPermission
+
   before_action :authenticate_user!
+  before_action :user_is_owner?, :except => [:new, :create]
   before_action :check_for_cancel, :only => [:create, :update]
 
   def new
@@ -31,12 +34,12 @@ class StocksController < ApplicationController
   end
 
   def edit
-    @stock = Stock.find(params[:id])
+    @stock = get_stock
     @portfolio = get_portfolio
   end
 
   def update
-    @stock = Stock.find(params[:id])
+    @stock = get_stock
     @portfolio = get_portfolio
 
     if @stock.update_attributes(stock_params)
@@ -61,10 +64,15 @@ class StocksController < ApplicationController
     )
   end
 
+  def get_stock
+    Stock.find(params[:id])
+  end
+
   def get_portfolio
     if params[:portfolio_id]
       Portfolio.find(params[:portfolio_id])
     else
+      @stock = get_stock
       Portfolio.find(@stock.portfolio_id)
     end
   end

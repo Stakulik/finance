@@ -1,3 +1,5 @@
+- provide(:title, "Портфель #{@portfolio.name}")
+
 %h2
   Портфель #{@portfolio.name}
   %span Акций: #{@portfolio.stocks.length}
@@ -15,9 +17,7 @@
   .metrics-graphics
     #stocks-graph  
     - data = @portfolio.price_for_years
-    / - data = [{'date' => '2014-11-01','value' => 12}, {'date' => '2014-11-02','value' => 18}]
     = metrics_graphic_for data, target: '#stocks-graph', title: "Средневзвешенная стоимость портфеля за последние 2 года", width: 600, height: 250, x_accessor: 'date', y_accessor: 'value', time_format: '%Y-%m-%d'
-    
 - else
   .no_items
     %p На данный момент в портфеле нет акций

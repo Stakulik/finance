@@ -1,16 +1,17 @@
+- provide(:title, "Восстановление пароля")
+
 %h3 Забыли пароль?
 
 %p.notice= notice
 %p.alert= alert
 
-.about-user
-  = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
-    = devise_error_messages!
-    
-    .attribute
-      %p.usual E-mail:
-      = f.email_field :email, autofocus: true
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, :class => "about-user" }) do |f|
+  = devise_error_messages!
+  
+  .attribute
+    %p.usual E-mail:
+    = f.email_field :email, autofocus: true
 
-    = f.submit "Отправить инструкции по смене пароля"
+  = f.submit "Отправить инструкции по смене пароля"
 
 = render "devise/shared/links"

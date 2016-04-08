@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-
   root 'simple_pages#index'
 
-  get 'about', to: 'simple_pages#about'
+  get 'news', to: 'simple_pages#news'
+  get 'contacts', to: 'simple_pages#contacts'
 
   devise_for :users
 

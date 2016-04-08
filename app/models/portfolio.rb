@@ -11,14 +11,14 @@
 #
 
 class Portfolio < ActiveRecord::Base
-  has_many :stocks
+  has_many :stocks, :dependent => :destroy
   belongs_to :user
 
   validates :name, presence: true, length: { in: 1..30 }
   validates :user_id, presence: true
   validates :description, length: { in: 0..200 }
 
-  accepts_nested_attributes_for :stocks, allow_destroy: true
+  # accepts_nested_attributes_for :stocks, allow_destroy: true
 
 
   @@stocks_history = {}
