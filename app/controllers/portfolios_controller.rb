@@ -47,7 +47,7 @@ class PortfoliosController < ApplicationController
     @portfolio = get_portfolio
 
     if @portfolio.update_attributes(portfolio_params)
-      redirect_to @portfolio
+      redirect_to portfolios_path
     else
       render 'edit'
     end

@@ -41,6 +41,10 @@
 
 .back-link {
   margin: 30px 0px;
-  font-size: 17px;
-  text-decoration: underline;
+
+  a {
+    font-size: 17px;
+    text-decoration: underline;
+    color: #23527c;
+  }
 }
