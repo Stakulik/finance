@@ -14,7 +14,7 @@ class StocksController < ApplicationController
   include UserPermission
 
   before_action :authenticate_user!
-  before_action :user_is_owner?, :except => [:new, :create]
+  before_action :user_is_owner?
   before_action :check_for_cancel, :only => [:create, :update]
 
   def new
