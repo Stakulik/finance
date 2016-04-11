@@ -21,29 +21,104 @@ class Portfolio < ActiveRecord::Base
 
   @@stocks_history = {}
 
-  def price_for_years(count_years = 2)
+  def get_data_about_stocks(count_years = 2)
     @yahoo_client = YahooFinance::Client.new
-    prices_by_days = {}
 
-    stocks.each do |stock|
-      next if stock.amount == 0
+    stocks_collection = get_stocks
 
-      data_by_days = get_finance_quotes(stock, count_years)
-      next unless data_by_days
-
-      prices_by_days = calculate_prices_for_stock(data_by_days, prices_by_days, stock.amount)
-    end
+    prices_by_days = get_prices_by_days(stocks_collection, count_years)
 
     convert_for_metrics(prices_by_days)
   end
 
-  def get_finance_quotes(stock, count_years)
+  def get_stocks
+    demanded_stocks = stocks.demanded
+    return [] if demanded_stocks.empty?
+
+    stocks_names = demanded_stocks.map { |s| s.name }
+
+    yahoo_today_data = try_use_yahoo(stocks_names, nil)
+    
+    yahoo_today_data ? filter_today_data(yahoo_today_data, demanded_stocks) : []
+  end
+
+  def get_prices_by_days(stocks_collection, count_years)
+    prices_by_days = {}
+    
+    stocks_collection.each do |stock_and_yahoo_data|
+      stock, yahoo_today_data = stock_and_yahoo_data
+
+      data_by_days = get_finance_quotes(stock, count_years, yahoo_today_data)
+      next unless data_by_days
+
+      calculate_prices_for_stock(data_by_days, prices_by_days, stock.amount)
+    end
+
+    prices_by_days
+  end
+
+  def convert_for_metrics(prices_by_days)
+    date_value = []
+
+    prices_by_days.each do |k, v|
+      date_value << {date: k, value: v}
+    end
+    
+    date_value
+  end
+
+  def try_use_yahoo(stocks, count_years)
+    yahoo_data = nil
+
+    begin
+      yahoo_data = if count_years
+        stock = stocks.first
+        time_now = Time.now
+
+        sleep(0.1)
+        @yahoo_client.historical_quotes( stock.name, 
+                                         { start_date: time_now - count_years.years,
+                                           end_date: time_now } )
+      else
+        @yahoo_client.quotes(stocks, [:low, :high, :last_trade_date])
+      end
+    rescue Exception => e
+      logger.error e.message
+      logger.error e.backtrace.inspect
+    end
+
+    yahoo_data
+  end
+
+  def filter_today_data(yahoo_today_data, demanded_stocks)
+    stocks_collection = []
+
+    yahoo_today_data.each_with_index do |stock_yahoo_data, i|
+      next if stock_yahoo_data.last_trade_date == "N/A"
+
+      stocks_collection.push([demanded_stocks[i], stock_yahoo_data])
+    end
+
+    stocks_collection
+  end
+
+  def get_finance_quotes(stock, count_years, yahoo_today_data)
     data_by_days = get_history_data(stock.name)
     data_by_days ||= get_yahoo_data(stock, count_years)
-
     return nil unless data_by_days
 
-    add_today_data(data_by_days, stock)
+    add_today_data(data_by_days, stock.name, yahoo_today_data)
+  end
+
+  def calculate_prices_for_stock(data_by_days, prices_by_days, stock_amount)
+    data_by_days.reverse.each do |day_data|
+      date, average_price = retrieve_data(day_data)
+
+      prices_by_days[date] = 0 unless prices_by_days[date]
+      prices_by_days[date] += average_price * stock_amount
+    end
+
+    prices_by_days
   end
 
   # @@stocks_history looks like { :AAPL => [ "07.04.2016", yahoo_data ] }
@@ -61,61 +136,20 @@ class Portfolio < ActiveRecord::Base
   end
 
   def get_yahoo_data(stock, count_years)
-    yahoo_data = try_use_yahoo(stock, count_years)
+    yahoo_data = try_use_yahoo([stock], count_years)
 
     update_history_data(stock.name, yahoo_data) if yahoo_data
 
     yahoo_data
   end
 
-  def try_use_yahoo(stock, count_years)
-    time_now = Time.now
-    yahoo_data = nil
-
-    begin
-      yahoo_data = if count_years
-        @yahoo_client.historical_quotes( stock.name, 
-                                         { start_date: time_now - count_years.years,
-                                           end_date: time_now } )
-      else
-        @yahoo_client.quotes([stock.name], [:low, :high, :trade_date])
-      end
-
-      sleep(0.2)
-    rescue Exception => e
-      logger.error "Problem around getting data about #{stock.name} stock"
-      logger.error e.message
-      logger.error e.backtrace.inspect
-    end
-
-    yahoo_data
-  end
-
-  def update_history_data(stock_name, yahoo_data)
-    @@stocks_history[stock_name.to_sym] = [Time.now.strftime('%d.%m.%Y'), yahoo_data.deep_dup]
-  end
-
-  def add_today_data(data_by_days, stock)
-    yahoo_today_data = try_use_yahoo(stock, nil).try(:first)
-
-    if yahoo_today_data
-      yahoo_today_data[:trade_date] = Time.now.strftime('%Y-%m-%d')
-
+  def add_today_data(data_by_days, stock_name, yahoo_today_data)
+    if yahoo_today_data.last_trade_date == Time.now.strftime('%-m/%-d/%Y')
+      yahoo_today_data.trade_date = Time.now.strftime('%Y-%m-%d')
       data_by_days.unshift(yahoo_today_data)
     end
 
     data_by_days
-  end
-
-  def calculate_prices_for_stock(data_by_days, prices_by_days, stock_amount)
-    data_by_days.reverse.each do |day_data|
-      date, average_price = retrieve_data(day_data)
-
-      prices_by_days[date] = 0 unless prices_by_days[date]
-      prices_by_days[date] += average_price * stock_amount
-    end
-
-    prices_by_days
   end
 
   def retrieve_data(day_data)
@@ -127,14 +161,8 @@ class Portfolio < ActiveRecord::Base
     [date, average_price]
   end
 
-  def convert_for_metrics(prices_by_days)
-    date_value = []
-
-    prices_by_days.each do |k, v|
-      date_value << {date: k, value: v}
-    end
-    
-    date_value
+  def update_history_data(stock_name, yahoo_data)
+    @@stocks_history[stock_name.to_sym] = [Time.now.strftime('%d.%m.%Y'), yahoo_data.deep_dup]
   end
 
 end
