@@ -75,7 +75,6 @@ class Portfolio < ActiveRecord::Base
         stock = stocks.first
         time_now = Time.now
 
-        sleep(0.1)
         @yahoo_client.historical_quotes( stock.name, 
                                          { start_date: time_now - count_years.years,
                                            end_date: time_now } )

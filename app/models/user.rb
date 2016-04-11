@@ -24,11 +24,9 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-  validates :password, :password_confirmation, presence: true, length: { in: 6..20 }, if: :password
-  validates_confirmation_of :password
+  validates :password, :password_confirmation, presence: true, length: { in: 6..20 }, on: :create
 
   before_save { self.email = email.downcase }
-
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable

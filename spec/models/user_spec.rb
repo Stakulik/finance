@@ -35,6 +35,12 @@ RSpec.describe User, type: :model do
       expect{ @user.save }.to change{ User.count }.by(1)
     end
 
+    it "with empty fio" do
+      @user.fio = ""
+
+      expect{ @user.save }.to change{ User.count }.by(1)
+    end
+
   end
 
   describe "is invalid" do
@@ -45,32 +51,27 @@ RSpec.describe User, type: :model do
         @invalid_user.valid?
       end
 
-      it "fio" do
-        expect(@invalid_user.errors[:fio]).to include("can't be blank")
-      end
-
       it "email" do
-        expect(@invalid_user.errors[:email]).to include("can't be blank")
+        expect(@invalid_user.errors[:email]).to include("не может быть пустым")
       end
 
+      it "password" do
+        expect(@invalid_user.errors[:password]).to include("не может быть пустым")
+      end
     end
 
     context "with" do
       before(:each) do
-        @invalid_user = User.new( :fio => "Abc", :email => "a@a.r", :phone => "#{'a' * 20}ex@.com" )
+        @invalid_user = User.new( :email => "a@a.r", :password => "qaz" )
         @invalid_user.valid?
       end
 
-      it "fio < 5 symbols" do
-        expect(@invalid_user.errors[:fio]).to include("is too short (minimum is 5 characters)")
-      end
-
       it "email < 6 symbols " do
-        expect(@invalid_user.errors[:email]).to include("is too short (minimum is 6 characters)")
+        expect(@invalid_user.errors[:email]).to include("недостаточной длины (не может быть меньше 6 символов)")
       end
 
-      it "phone > 20 symbols" do
-        expect(@invalid_user.errors[:phone]).to include("is too long (maximum is 20 characters)")
+      it "password < 6 symbols" do
+        expect(@invalid_user.errors[:password]).to include("недостаточной длины (не может быть меньше 6 символов)")
       end
 
     end
@@ -91,16 +92,14 @@ RSpec.describe User, type: :model do
         expect{ @user.save }.to_not change{ User.count }
       end
 
-      it "with empty phone" do
-        @user.email = ""
+      it "without password" do
+        @user.password = nil
 
         expect{ @user.save }.to_not change{ User.count }
       end
 
     end
-    # it "without password" do
-
-    # end
 
   end
+
 end

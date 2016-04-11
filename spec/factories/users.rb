@@ -21,9 +21,11 @@
 
 FactoryGirl.define do
   factory :user do
-    fio   "Агеев Иван Федорович"
-    email "van@example.com"
-    phone "8 931 123 45 67"
+    fio       "Агеев Иван Федорович"
+    email     "van@example.com"
+    phone     "8 931 123 45 67"
+    password  "qazwsx"
+    password_confirmation "qazwsx"
 
     trait :male do
       fio   "Сигов Олег Андреевич"
