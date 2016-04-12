@@ -16,6 +16,7 @@ class PortfoliosController < ApplicationController
   before_action :authenticate_user!
   before_action :user_is_owner?, :except => [:index, :new, :create]
   before_action :check_for_cancel, :only => [:create, :update]
+  before_action :get_portfolio, :only => [:edit, :update, :destroy]
   
   def index
     @portfolios = Portfolio.eager_load(:stocks).where("user_id = ?", current_user.id)
@@ -40,12 +41,9 @@ class PortfoliosController < ApplicationController
   end
 
   def edit
-    @portfolio = get_portfolio
   end
 
   def update
-    @portfolio = get_portfolio
-
     if @portfolio.update_attributes(portfolio_params)
       redirect_to portfolios_path
     else
@@ -54,7 +52,7 @@ class PortfoliosController < ApplicationController
   end
 
   def destroy
-    Portfolio.find(params[:id]).destroy
+    @portfolio.destroy
     redirect_to portfolios_path
   end
 
@@ -69,7 +67,7 @@ class PortfoliosController < ApplicationController
   end
 
   def get_portfolio
-    Portfolio.find(params[:id])
+    @portfolio = Portfolio.find(params[:id])
   end
 
   def check_for_cancel

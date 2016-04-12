@@ -22,7 +22,7 @@
 class User < ActiveRecord::Base
   has_many :portfolios, :dependent => :destroy
 
-  validates :email, presence: true, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
+  validates :email, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
   validates :password, :password_confirmation, presence: true, length: { in: 6..20 }, on: :create
 

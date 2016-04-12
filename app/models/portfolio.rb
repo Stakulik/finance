@@ -22,11 +22,7 @@ class Portfolio < ActiveRecord::Base
   @@stocks_history = {}
 
   def get_data_about_stocks(count_years = 2)
-    @yahoo_client = YahooFinance::Client.new
-
-    stocks_collection = get_stocks
-
-    prices_by_days = get_prices_by_days(stocks_collection, count_years)
+    prices_by_days = get_prices_by_days(get_stocks, count_years)
 
     convert_for_metrics(prices_by_days)
   end
@@ -35,7 +31,7 @@ class Portfolio < ActiveRecord::Base
     demanded_stocks = stocks.demanded
     return [] if demanded_stocks.empty?
 
-    stocks_names = demanded_stocks.map { |s| s.name }
+    stocks_names = demanded_stocks.map(&:name)
 
     yahoo_today_data = try_use_yahoo(stocks_names, nil)
     
@@ -68,20 +64,21 @@ class Portfolio < ActiveRecord::Base
   end
 
   def try_use_yahoo(stocks, count_years)
+    @yahoo_client = YahooFinance::Client.new
     yahoo_data = nil
 
     begin
       yahoo_data = if count_years
         stock = stocks.first
-        time_now = Time.now
+        date_today = Date.today
 
         @yahoo_client.historical_quotes( stock.name, 
-                                         { start_date: time_now - count_years.years,
-                                           end_date: time_now } )
+                                         { start_date: date_today - count_years.years,
+                                           end_date: date_today } )
       else
         @yahoo_client.quotes(stocks, [:low, :high, :last_trade_date])
       end
-    rescue Exception => e
+    rescue StandardError => e
       logger.error e.message
       logger.error e.backtrace.inspect
     end
@@ -92,7 +89,7 @@ class Portfolio < ActiveRecord::Base
   def filter_today_data(yahoo_today_data, demanded_stocks)
     stocks_collection = []
 
-    yahoo_today_data.each_with_index do |stock_yahoo_data, i|
+    yahoo_today_data.each.with_index do |stock_yahoo_data, i|
       next if stock_yahoo_data.last_trade_date == "N/A"
 
       stocks_collection.push([demanded_stocks[i], stock_yahoo_data])
@@ -102,8 +99,7 @@ class Portfolio < ActiveRecord::Base
   end
 
   def get_finance_quotes(stock, count_years, yahoo_today_data)
-    data_by_days = get_history_data(stock.name)
-    data_by_days ||= get_yahoo_data(stock, count_years)
+    data_by_days = get_history_data(stock.name) || get_yahoo_data(stock, count_years)
     return nil unless data_by_days
 
     add_today_data(data_by_days, stock.name, yahoo_today_data)
@@ -124,10 +120,9 @@ class Portfolio < ActiveRecord::Base
   # and holds yahoo's today data about stock if today earlier was query about this stock
   def get_history_data(stock_name)
     history_data = @@stocks_history[stock_name.to_sym].deep_dup
-
     return nil unless history_data
 
-    if history_data[0] == Time.now.strftime('%d.%m.%Y')
+    if history_data[0] == Date.today.strftime('%d.%m.%Y')
       history_data[1] 
     else
       nil
@@ -143,12 +138,10 @@ class Portfolio < ActiveRecord::Base
   end
 
   def add_today_data(data_by_days, stock_name, yahoo_today_data)
-    if yahoo_today_data.last_trade_date == Time.now.strftime('%-m/%-d/%Y')
-      yahoo_today_data.trade_date = Time.now.strftime('%Y-%m-%d')
-      data_by_days.unshift(yahoo_today_data)
-    end
+    return data_by_days unless yahoo_today_data.last_trade_date == Date.today.strftime('%-m/%-d/%Y')
 
-    data_by_days
+    yahoo_today_data.trade_date = Date.today.strftime('%Y-%m-%d')
+    data_by_days.unshift(yahoo_today_data)
   end
 
   def retrieve_data(day_data)
@@ -161,7 +154,7 @@ class Portfolio < ActiveRecord::Base
   end
 
   def update_history_data(stock_name, yahoo_data)
-    @@stocks_history[stock_name.to_sym] = [Time.now.strftime('%d.%m.%Y'), yahoo_data.deep_dup]
+    @@stocks_history[stock_name.to_sym] = [Date.today.strftime('%d.%m.%Y'), yahoo_data.deep_dup]
   end
 
 end

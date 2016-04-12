@@ -16,14 +16,14 @@ class StocksController < ApplicationController
   before_action :authenticate_user!
   before_action :user_is_owner?
   before_action :check_for_cancel, :only => [:create, :update]
+  before_action :get_stock, :only => [:edit, :update, :destroy]
+  before_action :get_portfolio, :only => [:new, :create, :edit, :update]
 
   def new
-    @portfolio = get_portfolio
     @stock = @portfolio.stocks.build
   end
 
   def create
-    @portfolio = get_portfolio
     @stock = @portfolio.stocks.build(stock_params)
 
     if @stock.save
@@ -34,14 +34,9 @@ class StocksController < ApplicationController
   end
 
   def edit
-    @stock = get_stock
-    @portfolio = get_portfolio
   end
 
   def update
-    @stock = get_stock
-    @portfolio = get_portfolio
-
     if @stock.update_attributes(stock_params)
       redirect_to @portfolio
     else
@@ -50,7 +45,7 @@ class StocksController < ApplicationController
   end
 
   def destroy
-    Stock.find(params[:id]).destroy
+    @stock.destroy
     redirect_to :back
   end
 
@@ -65,14 +60,14 @@ class StocksController < ApplicationController
   end
 
   def get_stock
-    Stock.find(params[:id])
+    @stock = Stock.find(params[:id])
   end
 
   def get_portfolio
-    if params[:portfolio_id]
+    @portfolio = if params[:portfolio_id]
       Portfolio.find(params[:portfolio_id])
     else
-      @stock = get_stock
+      get_stock
       Portfolio.find(@stock.portfolio_id)
     end
   end
