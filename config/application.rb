@@ -8,6 +8,8 @@ Bundler.require(*Rails.groups)
 
 module Finance
   class Application < Rails::Application
+    config.autoload_paths += %W(#{config.root}/lib/modules)
+
     I18n.enforce_available_locales = false
     config.i18n.locale = :ru
     config.i18n.default_locale = :ru
