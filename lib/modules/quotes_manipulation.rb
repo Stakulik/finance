@@ -12,9 +12,7 @@ module QuotesManipulation
     demanded_stocks = stocks.demanded
     return [] if demanded_stocks.empty?
 
-    stocks_names = demanded_stocks.map(&:name)
-
-    yahoo_today_data = try_use_yahoo(stocks_names, nil)
+    yahoo_today_data = try_use_yahoo(stocks.demanded_names, nil)
     
     yahoo_today_data ? filter_today_data(yahoo_today_data, demanded_stocks) : []
   end

@@ -19,5 +19,6 @@ class Stock < ActiveRecord::Base
   before_save { self.name = name.upcase } 
 
   scope :demanded, -> { where("amount > ?", 0) }
+  scope :demanded_names, -> { demanded.pluck(:name) }
 
 end
