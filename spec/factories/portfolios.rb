@@ -12,6 +12,18 @@
 
 FactoryGirl.define do
   factory :portfolio do
-    name "MyString"
+    name        "Первый портфель"
+    description "Портфель с акциями"
+
+    factory :portfolio_with_stocks do
+      transient do
+        stocks_count 5
+      end
+
+      after(:create) do |portfolio, evaluator|
+        create_list(:stock, evaluator.stocks_count, portfolio: portfolio)
+      end
+    end
   end
 end
+

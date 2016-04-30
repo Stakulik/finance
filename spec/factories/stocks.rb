@@ -12,6 +12,21 @@
 
 FactoryGirl.define do
   factory :stock do
-    name "MyString"
+    name    "AAPL"
+    amount  1
+    portfolio
+
+    trait :fb do
+      name "FB"
+    end
+
+    trait :htch do
+      name "HTCH"
+    end
+
+    trait :msft do
+      name "MSFT"
+    end
+
   end
 end

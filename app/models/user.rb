@@ -24,11 +24,18 @@ class User < ActiveRecord::Base
 
   validates :email, uniqueness: { case_sensitive: false }, length: { in: 6..20 }, 
                     format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
-  validates :password, :password_confirmation, presence: true, length: { in: 6..20 }, on: :create
+  validates :password, presence: true, length: { in: 6..20 }, on: :create
 
+  before_validation :add_password_error, if: ->(user){ user.password != user.password_confirmation }
   before_save { self.email = email.downcase }
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable
+
+  private
+
+  def add_password_error
+    errors.add(:password, "и подтверждение должны совпадать")
+  end
 
 end

@@ -28,6 +28,8 @@ group :development, :test do
   gem 'pry-rails'
   gem 'factory_girl_rails', '~> 4.6.0'
   gem 'rspec-rails', '~> 3.4.2'
+  gem 'capybara', '~> 2.7.0'
+  gem 'capybara-webkit'
 end
 
 group :development do
@@ -36,3 +38,6 @@ group :development do
   gem 'bullet', '~> 5.0.0'
 end
 
+group :test do
+  gem 'database_cleaner'
+end

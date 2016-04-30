@@ -52,7 +52,7 @@ RSpec.describe User, type: :model do
       end
 
       it "email" do
-        expect(@invalid_user.errors[:email]).to include("не может быть пустым")
+        expect(@invalid_user.errors[:email]).to include("недостаточной длины (не может быть меньше 6 символов)")
       end
 
       it "password" do

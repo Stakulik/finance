@@ -33,5 +33,9 @@ FactoryGirl.define do
       phone "8 905 222 33 14"
     end
 
+    factory :user_with_portfolio do
+      after(:create) { create(:portfolio_with_stocks) }
+    end
+
   end
 end
