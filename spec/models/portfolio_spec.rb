@@ -36,4 +36,10 @@ describe Portfolio, type: :model do
 
   end
 
+  it "will be removed with user" do
+    user = create(:user_with_portfolio)
+
+    expect{ user.destroy }.to change{ Portfolio.count }
+  end
+
 end

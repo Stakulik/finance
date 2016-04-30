@@ -36,4 +36,10 @@ describe Stock, type: :model do
     
   end
 
+  it "will be removed with portfolio" do
+    portfolio = create(:portfolio_with_stocks)
+
+    expect{ portfolio.destroy }.to change{ Stock.count }
+  end 
+
 end

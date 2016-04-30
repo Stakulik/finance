@@ -14,6 +14,7 @@ FactoryGirl.define do
   factory :portfolio do
     name        "Первый портфель"
     description "Портфель с акциями"
+    user_id     1
 
     factory :portfolio_with_stocks do
       transient do
