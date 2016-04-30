@@ -10,8 +10,30 @@
 #  updated_at   :datetime         not null
 #
 
-# require 'rails_helper'
+require 'rails_helper'
 
-# RSpec.describe Stock, type: :model do
+describe Stock, type: :model do
   
-# end
+  describe "is valid" do
+    before(:each) { @stock = build(:stock, portfolio_id: 1)  }
+
+    it "with filled attributes" do
+      expect{ @stock.save }.to change{ Stock.count }.by(1)
+    end
+
+  end
+
+  describe "is invalid" do
+    before(:each) { (@invalid_stock = Stock.new).valid? }
+
+    it "without name" do
+      expect(@invalid_stock.errors[:name]).to include("не может быть пустым")
+    end
+
+    it "without portfolio_id" do
+      expect(@invalid_stock.errors[:portfolio_id]).to include("не может быть пустым")
+    end
+    
+  end
+
+end

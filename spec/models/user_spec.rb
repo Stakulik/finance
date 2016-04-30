@@ -22,6 +22,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+
   describe "is valid" do
     before(:each) { @user = build(:user) }
 
@@ -47,8 +48,7 @@ RSpec.describe User, type: :model do
 
     context "without" do
       before(:each) do
-        @invalid_user = User.new
-        @invalid_user.valid?
+        (@invalid_user = User.new).valid?
       end
 
       it "email" do
@@ -58,12 +58,12 @@ RSpec.describe User, type: :model do
       it "password" do
         expect(@invalid_user.errors[:password]).to include("не может быть пустым")
       end
+
     end
 
     context "with" do
       before(:each) do
-        @invalid_user = User.new( :email => "a@a.r", :password => "qaz" )
-        @invalid_user.valid?
+        (@invalid_user = User.new(:email => "a@a.r", :password => "qaz")).valid?
       end
 
       it "email < 6 symbols " do
@@ -97,7 +97,7 @@ RSpec.describe User, type: :model do
 
         expect{ @user.save }.to_not change{ User.count }
       end
-
+      
     end
 
   end
