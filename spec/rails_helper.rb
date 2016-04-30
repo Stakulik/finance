@@ -38,6 +38,13 @@ RSpec.configure do |config|
     config.use_transactional_fixtures = false
   end
 
+  describe "Portfolio management:", :type => :feature do
+    config.use_transactional_fixtures = false
+  end
+
+  describe "Stock management:", :type => :feature do
+    config.use_transactional_fixtures = false
+  end  
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
